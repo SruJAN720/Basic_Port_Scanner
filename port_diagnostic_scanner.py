@@ -129,6 +129,7 @@ print("Scanning"+target+"for open ports...")
 start_time = datetime.now()
 with ThreadPoolExecutor(max_workers=50) as executor:
     open_ports = list(executor.map(scan_port, ports))
+    open_ports = [port for port in open_ports if port is not None]
 end_time = datetime.now()
 with open("network_report.txt","w") as file:
     file.write(f"Scan report for {target}\n")
@@ -142,6 +143,8 @@ with open("network_report.txt","w") as file:
             file.write(f"  Description: {info['description']}\n")
             file.write(f"  Severity: {info['severity']}\n")
             file.write(f"  Recommended Fix: {info['fix']}\n\n")
+        else:
+            file.write(f"Port {port} - No specific vulnerability information available.\n\n")
     if(not open_ports):
         file.write("No open ports found.\n")
 
